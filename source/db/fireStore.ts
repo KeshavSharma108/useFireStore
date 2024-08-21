@@ -1,7 +1,8 @@
 // firebaseConfig.js
 import {initializeApp} from 'firebase/app'
 import { getFirestore } from 'firebase/firestore';
-
+import { collection, getDocs } from "firebase/firestore";
+import { TaskType } from '../../types';
 
 
 
@@ -17,7 +18,29 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+const db = getFirestore(app)
+
+
+export const fetchData = async ():Promise<TaskType[]> => {
+
+      const querySnapshot = await getDocs(collection(db, "tasks"));
+   const tasks : TaskType[] = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: doc.data().name,
+        createdAt: doc.data().createdAt,
+        completedAt: doc.data().completedAt,
+      }));
+
+      return tasks
+  
+    } 
   
 
-const db = getFirestore(app)
+
+
+
+
+
+
+
 export { db }
