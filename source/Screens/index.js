@@ -1,3 +1,4 @@
 import { Home } from "./Home";
 import { FireStore } from "./FireStore";
-export { Home , FireStore};
+import { CreateTask } from "./CreateTask";
+export { Home , FireStore,CreateTask};
