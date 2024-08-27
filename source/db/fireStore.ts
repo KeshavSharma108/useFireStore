@@ -1,6 +1,11 @@
 // firebaseConfig.js
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 import { TaskType } from "../../types";
 
 const firebaseConfig = {
@@ -27,6 +32,11 @@ export const fetchData = async (): Promise<TaskType[]> => {
   }));
 
   return tasks;
+};
+
+export const streamTasks = (observer) => {
+  const unsubscriber = onSnapshot(collection(db, "tasks"), observer);
+  return unsubscriber;
 };
 
 export { db };

@@ -2,34 +2,30 @@ import { Formik } from "formik";
 import React from "react";
 import { Button, TextInput, View, Text } from "react-native";
 import { db } from "../../db";
-import { collection, getDocs } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import * as yup from "yup";
 
-
 type FormProps = {
-  name:string 
-}
+  name: string;
+};
 
-
+const validationSchema = yup.object().shape<FormProps>({
+  name: yup.string().required(),
+});
 const CreateTask = ({ navigation }) => {
-  const validationSchema = yup.object().shape<FormProps>({
-    name: yup.string().required(), 
-  });
-
   return (
     <View>
       <Formik
         initialValues={{ name: "" }}
         onSubmit={async (values) => {
-          const querySnapshot = await getDocs(collection(db, "tasks"));
-          const tasks = querySnapshot.docs.map((doc) => ({
+          const tasks = await addDoc(collection(db, "tasks"), {
             name: values.name,
             createdAt: new Date(),
             completedAt: null,
-          }));
+          });
           navigation.navigate("FireStore", { tasks });
 
-          console.log(tasks)
+          console.log(tasks);
         }}
         validationSchema={validationSchema}
       >
